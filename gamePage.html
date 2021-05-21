@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Página de juego | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <div class="pageGameContainer">
+            <h2 class="pageTitle"></h2>
+            <div class="pageGameImgContainer">
+                <a id="prev" class="prev">❮</a>
+                <img id="pageGameImg" class="pageGameImg" />
+                <a id="next" class="next">❯</a>
+                <div id="mapSlide"></div>
+            </div>
+            <div id="commentSection">
+                <h3>Críticas</h3>
+                <hr/>
+            </div>
+            <div id="modalBottom" class="modal">
+                <div class="modal-content">
+                    <div class="modalCriticContainer">
+                        <div class="modalCriticInfo">
+                            <p class="modalUserParagraph"></p>
+                            <p class="modalDateParagraph"></p>
+                        </div>
+                        <div class="modalCriticContent">
+                            <p class="modalTitleParagraph"></p>
+                            <p class="modalCriticParagraph"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="modalWriteCritic" class="modal">
+                <div class="modal-content modalWriteCriticContent">
+                    <h3>Escribe tu crítica</h3>
+                    <input type="text" name="title" id="titleInput" placeholder="Título de la crítica" />
+                    <br/>
+                    <br/>
+                    <textarea name="textarea" cols="70" rows="10" placeholder="Contenido de la crítica"></textarea>
+                    <br/>
+                    <br/>
+                    <button id="sendCriticButton">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        var modalBottom = document.getElementById("modalBottom");
+        var modalWriteCritic = document.getElementById("modalWriteCritic");
+
+        if (localStorage.getItem("gameDragged") != null) {
+
+            modalWriteCritic.style.display = "block";
+            localStorage.removeItem("gameDragged");
+        }
+
+        if (getCookie("bdStatus") != "ok" || localStorage.getItem("gameClicked") == null) {
+            window.location.href = "index.html";
+        } else {
+
+            if (getCookie("userLogged") != "") {
+
+                logOutLink();
+                logOutLinkSideMenu()
+                welcomeMessage();
+                setBackgroundMode();
+                userAreaLink();
+                userAreaLinkSideMenu();
+            } else {
+
+                registryLink();
+                loginLink();
+                loginLinkSideMenu();
+                registryLinkSideMenu();
+            }
+
+            var id = localStorage.getItem("gameClicked");
+            localStorage.removeItem("gameClicked");
+            localStorage.setItem("mapGameId", id);
+            var db;
+            var request = window.indexedDB.open("Softofilos");
+
+            request.onsuccess = function () {
+
+                var db = request.result;
+                var tr = db.transaction(db.objectStoreNames, "readonly");
+                var gamesStore = tr.objectStore("games");
+                var game = gamesStore.get(parseInt(id));
+
+                game.onsuccess = function () {
+
+                    document.getElementsByClassName("pageGameImg")[0].src = game.result.img;
+                    document.getElementsByClassName("pageTitle")[0].textContent = game.result.name;
+                }
+
+                var criticsStore = tr.objectStore("critics");
+                var critic = criticsStore.get(parseInt(id));
+
+                critic.onsuccess = function () {
+
+                    var commentSection = document.getElementById("commentSection");
+
+                    if (critic.result == undefined) {
+
+                        var emptyParagraph = document.createElement("p");
+                        emptyParagraph.textContent =
+                            "No hay todavía ninguna crítica para ésta obra, ¡sé el primero!";
+                            emptyParagraph.style.textAlign = "center";
+                        commentSection.appendChild(emptyParagraph);
+
+                    } else {
+
+                        for (var i = 0; i < critic.result.critics.length; i++) {
+
+                            var criticContainer = document.createElement("div");
+                            criticContainer.className = "criticContainer";
+                            criticContainer.setAttribute("onclick", "readEntireCritic(\"" + critic.result.critics[
+                                    i].user + "\", \"" + critic.result.critics[i].title + "\", \"" + critic
+                                .result.critics[i].critic + "\", \"" + critic.result.critics[i].date +
+                                "\")");
+                            commentSection.appendChild(criticContainer);
+
+                            var criticInfo = document.createElement("div");
+                            criticInfo.className = "criticInfo";
+                            criticContainer.appendChild(criticInfo);
+
+                            var userParagraph = document.createElement("p");
+                            userParagraph.textContent = critic.result.critics[i].user;
+                            criticInfo.appendChild(userParagraph);
+
+                            var dateParagraph = document.createElement("p");
+                            dateParagraph.textContent = new Date(critic.result.critics[i].date).toLocaleDateString() +
+                                " " + new Date(critic.result.critics[i].date).toLocaleTimeString();
+                            criticInfo.appendChild(dateParagraph);
+
+                            var criticContent = document.createElement("div");
+                            criticContent.className = "criticContent";
+                            criticContainer.appendChild(criticContent);
+
+                            var titleParagraph = document.createElement("p");
+                            titleParagraph.className = "titleParagraph";
+                            titleParagraph.textContent = critic.result.critics[i].title;
+                            criticContent.appendChild(titleParagraph);
+
+                            var criticParagraph = document.createElement("p");
+                            if (critic.result.critics[i].critic.length > 80) {
+
+                                criticParagraph.innerHTML = critic.result.critics[i].critic.substr(0, 79) +
+                                    "...";
+                            } else {
+
+                                criticParagraph.innerHTML = critic.result.critics[i].critic;
+                            }
+                            criticContent.appendChild(criticParagraph);
+                        }
+                    }
+                    
+                    var br = document.createElement("br");
+                    commentSection.appendChild(br);
+                    
+                    var writeCritic = document.createElement("button");
+                    writeCritic.textContent = "Escribir una crítica";
+                    writeCritic.onclick = function () {
+
+                        if (getCookie("userLogged") != "") {
+                            document.getElementById("modalWriteCritic").style.display = "block";
+                        } else {
+                            localStorage.setItem("gameDragged", id);
+                            window.location.href = "login.html";
+                        }
+                    }
+                    commentSection.appendChild(writeCritic);
+
+                    document.getElementById("sendCriticButton").onclick = function () {
+
+                        var warning = "";
+
+                        if (document.getElementById("titleInput").value == "") {
+                            warning += "Rellene el campo de título<br/>";
+                        }
+                        if (document.getElementsByTagName("textarea")[0].value == "") {
+                            warning += "No ha escrito ninguna crítica<br/>";
+                        }
+
+                        if (warning == "") {
+
+                            sendCritic(id, getCookie("userLogged"), document.getElementById("titleInput").value,
+                                document.getElementsByTagName("textarea")[0].value);
+                        } else {
+
+                            $(function () {
+                                swal({
+                                    type: 'error',
+                                    title: 'Rellena los parámetros',
+                                    html: $("<div>").addClass("animated tada").html(warning)
+                                });
+                            });
+                        }
+                    }
+                }
+            }
+
+            $(function () {
+
+                $("#next").click(function () {
+
+                    $("#mapSlide").toggle();
+                    $("#pageGameImg").toggle();
+                });
+                
+                $("#prev").click(function () {
+
+                    $("#mapSlide").toggle();
+                    $("#pageGameImg").toggle();
+                });
+            });
+
+            //Se crea un evento para la recarga de la página. Se volverá a establecer el item del id del juego para continuar en la página
+            window.onbeforeunload = function () {
+
+                localStorage.setItem("gameClicked", id);
+            }
+        }
+    </script>
+    <!-- Para google maps -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFc24NyQH-NH1cey1_PTBqmJCGoV1sQB4&callback=mapCallbackFunction">
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+-Revisar que la pecha no se añade correctamente, siempre muestra la misma hora
+-Expresiones Regulares
+-Estilo
+-Controlar saltos de línea en las criticas
+-En la edición de obras, seleccionar parte del texto introducido según los resultados

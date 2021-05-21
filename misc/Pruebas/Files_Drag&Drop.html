@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        div {
+            width: 300px;
+            height: 200px;
+            display: inline-block;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="drop"></div>
+    <div id="drop2"></div>
+</body>
+<script type="text/javascript">
+    document.getElementById("drop").addEventListener("dragover", function (event) {
+
+        event.preventDefault();
+    });
+
+    document.getElementById("drop").addEventListener("drop", function (event) {
+        
+        event.preventDefault();
+        var image = event.dataTransfer.files[0].name;
+        console.log(image);
+    })
+</script>
+
+</html>

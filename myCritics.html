@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mis críticas | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+    <!-- Se importa la librería jsPDF -->
+    <script type="text/javascript" src="src/jspdf.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Mis críticas</h2>
+        <div id="modalMyCritic" class="modal">
+            <div class="modal-content">
+                <div class="modalMyCriticContainer">
+                    <p class="modalMyCriticTitleParagraph"></p>
+                    <div class="modalMyCriticImg">
+                        <img id="myCriticImg" />
+                    </div>
+                    <div class="modalMyCriticContent">
+                        <p class="modalMyCriticCriticParagraph"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        var modalMyCritic = document.querySelector("#modalMyCritic");
+        if (getCookie("userLogged") != "") {
+
+            logOutLink();
+            logOutLinkSideMenu()
+            welcomeMessage();
+            setBackgroundMode();
+            userAreaLink();
+            userAreaLinkSideMenu();
+
+        } else {
+
+            window.location.href = "index.html";
+        }
+
+        var db;
+        var request = window.indexedDB.open("Softofilos", 1);
+        var myCritics = [];
+        var tempObject;
+        var allGames;
+
+        request.onsuccess = function (event) {
+
+            db = request.result;
+            var tr = db.transaction(db.objectStoreNames, "readwrite");
+            var criticsStore = tr.objectStore("critics");
+            var gamesStore = tr.objectStore("games");
+
+            var allGamesRequest = gamesStore.getAll();
+            allGamesRequest.onsuccess = function (event) {
+
+                allGames = allGamesRequest.result;
+            }
+
+            var allCriticsRequest = criticsStore.getAll();
+            allCriticsRequest.onsuccess = function (event) {
+
+                for (var i = 0; i < allCriticsRequest.result.length; i++) {
+
+                    for (var j = 0; j < allCriticsRequest.result[i].critics.length; j++) {
+
+                        if (allCriticsRequest.result[i].critics[j].user == getCookie("userLogged")) {
+
+                            tempObject = allCriticsRequest.result[i].critics[j];
+                            tempObject.id = allCriticsRequest.result[i].gameId;
+                            myCritics.push(tempObject);
+                        }
+                    }
+                }
+                for (var i = 0; i < myCritics.length; i++) {
+
+                    var criticContainer = document.createElement("div");
+                    criticContainer.className = "myCriticsCriticContainer";
+
+                    for (var j = 0; j < allGames.length; j++) {
+
+                        if ((j + 1) == myCritics[i].id) {
+
+                            var myCriticsImgContainer = document.createElement("div");
+                            myCriticsImgContainer.className = "myCriticsImgContainer";
+                            criticContainer.appendChild(myCriticsImgContainer);
+
+                            var img = document.createElement("img");
+                            img.src = allGames[j].img;
+                            img.className = "myCriticsImg";
+                            myCriticsImgContainer.appendChild(img);
+
+                            var myCriticsContentContainer = document.createElement("div");
+                            myCriticsContentContainer.className = "myCriticsContentContainer";
+                            criticContainer.appendChild(myCriticsContentContainer);
+
+                            var titleParagraph = document.createElement("p");
+                            titleParagraph.textContent = allGames[j].name;
+                            titleParagraph.className = "myCriticsTitleParagraph";
+                            myCriticsContentContainer.appendChild(titleParagraph);
+
+                            var dateParagraph = document.createElement("p");
+                            dateParagraph.innerHTML = "<span style='font-weight:bold'>Fecha:</span> " + new Date(
+                                    myCritics[i].date).toLocaleDateString() + " " + new Date(myCritics[i].date)
+                                .toLocaleTimeString();
+                            dateParagraph.className = "myCriticsDateParagraph";
+                            myCriticsContentContainer.appendChild(dateParagraph);
+
+                            var criticTitleParagraph = document.createElement("p");
+                            criticTitleParagraph.innerHTML =
+                                "<span style='font-weight:bold'>Título de la crítica:</span> " + myCritics[i].title;
+                            criticTitleParagraph.className = "myCriticsDateParagraph";
+                            myCriticsContentContainer.appendChild(criticTitleParagraph);
+                        }
+                    }
+
+                    criticContainer.setAttribute("onclick", "readMyCritic(\"" + myCritics[i].user + "\", \"" +
+                        myCritics[i].title + "\", \"" + myCritics[i].critic + "\", \"" + myCritics[i].date +
+                        "\", \"" + myCritics[i].id + "\")");
+                    document.getElementsByTagName("main")[0].appendChild(criticContainer);
+                }
+
+                var printButtonContainer = document.createElement("div");
+                printButtonContainer.className = "printButtonContainer";
+                document.getElementsByTagName("main")[0].appendChild(printButtonContainer);
+
+                var printButton = document.createElement("button");
+                printButton.id = "printButton";
+                printButton.innerHTML = "Exportar críticas a PDF <i class='fas fa-file-pdf'></i>";
+                printButton.onclick = function () {
+
+                    printCritics(myCritics, allGames);
+                }
+                printButtonContainer.appendChild(printButton);
+            }
+        }
+    </script>
+</body>
+
+</html>

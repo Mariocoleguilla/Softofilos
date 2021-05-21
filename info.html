@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>información | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Información</h2>
+        <div class="infoContainer">
+            <h3>¿Qué es Softófilos™?</h3>
+            <p>Softófilos™ es una plataforma que tiene como objetivo el dar a conocer y abrir obras a puntos de vista diferentes
+                para formar una conversación acerca de los videojuegos más allá que como meros productos de consumo digital.</p>
+            <h3>¿Qué significa la palabra Softófilo?</h3>
+            <p>De la misma manera que una persona que le gusta el cine y una persona cinéfila tienen muchas diferencias entre
+                sí, una persona que le gusten los videojuegos y una persona que se considere softófila (aunque no se haya
+                de usar ése término obligatoriamente) también tienen grandes diferencias.
+            </p>
+            <p>La palabra Softófilo surgió a raíz de una comunidad de amantes de los videojuegos que se quiso alejar del término
+                "Gamer" y diferenciarse así de un modo más concreto del concepto de videojuego como entretenimiento o como
+                producto, y más como obra que pueda aportar un valor sentimental, artístico o educativo más allá del valor
+                material.
+            </p>
+            <h3>¿Cuál es la filosofía de Softófilos™?</h3>
+            <p>Debido a la tendencia al análisis de un videojuego como una obra, en Softófilos™ nos queremos alejar de ese pensamiento
+                del videojuego como producto o valor material, y por ello no es posible otorgar una nota numérica a una obra
+                en Softófilos™. De la misma manera, no se hace diferenciación a obras entre plataformas, precisamente para
+                reforzar ésa tendencia a analizar una obra desde otro punto de vista y más como el mensaje, la narrativa
+                o el apartado artístico.</p>
+            <p>En Softófilos™ buscamos el análisis, distintas interpretaciones, observaciones, etc. que se observen en una obra,
+                y que de esa manera, muchas obras que de otro modo serían infravaloradas, se den a conocer.</p>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        if (getCookie("bdStatus") != "ok") {
+
+            window.location.href = "index.html";
+        } else {
+
+            if (getCookie("userLogged") != "") {
+
+                logOutLink();
+                logOutLinkSideMenu()
+                welcomeMessage();
+                setBackgroundMode();
+                userAreaLink();
+                userAreaLinkSideMenu();
+            } else {
+
+                registryLink();
+                loginLink();
+                loginLinkSideMenu();
+                registryLinkSideMenu();
+            }
+        }
+    </script>
+</body>
+
+</html>

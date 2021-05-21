@@ -1,0 +1,136 @@
+{
+    "users": [{
+            "user": "admin",
+            "password": "zwnrm",
+            "birthDate": "Mon, 29 Jul 1996 22:00:00 GMT",
+            "backgroundMode": "clear",
+            "availability": "enabled"
+        },
+        {
+            "user": "Luis",
+            "password": "ofrhrglç{",
+            "birthDate": "Fri, 19 Apr 1999 22:00:00 GMT",
+            "backgroundMode": "clear",
+            "availability": "enabled"
+        }
+    ],
+    "games": [{
+            "name": "Bioshock Infinite",
+            "genre": "FPS Narrativo",
+            "developer": "Irrational Games",
+            "launchDate": "Mon, 25 Mar 2013 23:00:00 GMT",
+            "img": "./src/img/bioshock_infinite.png",
+            "lat": "42.251427",
+            "lng": "-71.002859"
+        },
+        {
+            "name": "The Witness",
+            "genre": "Puzzle",
+            "developer": "Jonathan Blow",
+            "launchDate": "Mon, 25 Jan 2016 23:00:00 GMT",
+            "img": "./src/img/the_witness.png",
+            "lat": "37.872103",
+            "lng": "-122.258630"
+        },
+        {
+            "name": "Grow Up",
+            "genre": "Exploración",
+            "developer": "Reflections",
+            "launchDate": "Mon, 15 Aug 2016 22:00:00 GMT",
+            "img": "./src/img/grow_up.png",
+            "lat": "54.984369",
+            "lng": "-1.620457"
+        },
+        {
+            "name": "The Witcher 3",
+            "genre": "Sandbox Aventura",
+            "developer": "CD Project Red",
+            "launchDate": "Mon, 18 May 2015 22:00:00 GMT",
+            "img": "./src/img/the_witcher_3.png",
+            "lat": "52.237232",
+            "lng": "21.019969"
+        },
+        {
+            "name": "The Stanley Parable",
+            "genre": "Walking Simulator Narrativo",
+            "developer": "Galactic Café",
+            "launchDate": "Wed, 16 Oct 2013 22:00:00 GMT",
+            "img": "./src/img/the_stanley_parable.png",
+            "lat": "unknown",
+            "lng": "unknown"
+        },
+        {
+            "name": "SUPERHOT",
+            "genre": "FPS",
+            "developer": "SUPERHOT Team",
+            "launchDate": "Wed, 24 Feb 2016 23:00:00 GMT",
+            "img": "./src/img/superhot.png",
+            "lat": "51.771548",
+            "lng": "19.466166"
+        },
+        {
+            "name": "Dark Souls Prepare To Die Edition",
+            "genre": "ROL Acción",
+            "developer": "From Software",
+            "launchDate": "Wed, 21 Sep 2011 22:00:00 GMT",
+            "img": "./src/img/dark-souls.png",
+            "lat": "35.711498",
+            "lng": "139.735071"
+        },
+        {
+            "name": "Rime",
+            "genre": "Aventura Puzzles",
+            "developer": "Tequila Works",
+            "launchDate": "Thu, 25 May 2017 22:00:00 GMT",
+            "img": "./src/img/rime.png",
+            "lat": "40.420883",
+            "lng": "-3.704951"
+        },
+        {
+            "name": "Mirror's Edge Catalyst",
+            "genre": "Plataformas Primera Persona",
+            "developer": "DICE",
+            "launchDate": "Mon, 06 Jun 2016 22:00:00 GMT",
+            "img": "./src/img/mirrors_edge_catalyst.png",
+            "lat": "59.329941",
+            "lng": "18.068920"
+        },
+        {
+            "name": "Kingdom Hearts 1.5+2.5 ReMIX",
+            "genre": "Action RPG",
+            "developer": "SquareSoft",
+            "launchDate": "Thu, 30 Mar 2017 22:00:00 GMT",
+            "img": "./src/img/kingdom_hearts_1.5_2.5.png",
+            "lat": "35.701450",
+            "lng": "139.707490"
+        },
+        {
+            "name": "Hollow Knight",
+            "genre": "Roguelike",
+            "developer": "Team Cherry",
+            "launchDate": "Thu, 23 Feb 2017 23:00:00 GMT",
+            "img": "./src/img/hollow_knight.png",
+            "lat": "-34.921099",
+            "lng": "138.601511"
+        },
+        {
+            "name": "Ratchet and Clank (2016)",
+            "genre": "Plataformas",
+            "developer": "Insomniac Games",
+            "launchDate": "Tue, 19 Apr 2016 22:00:00 GMT",
+            "img": "./src/img/ratchet_and_clank.png",
+            "lat": "34.191221",
+            "lng": "-118.342380"
+        }
+    ],
+    "critics": [{
+        "gameId": 1,
+        "critics": [{
+                "user": "admin",
+                "title": "Una obra maestra",
+                "critic": "Bioshock Infinite bebe del concepto del original BioShock, una sociedad utópica y exacerbada donde el ser humano se desarrolla como último fin, o cae en su perdición.<br/>Obviando cualquier tipo de cinemáticas, todo se desarrolla desde el punto de vista del jugador, siendo una experiencia más inmersiva.<br/>La historia sorprende por su forma de narrativa y su complejidad y conexión con anteriores entregas.<br/><br/>En definitiva, una obra digna de ser disfrutada.",
+                "date": "Wed, 21 Feb 2018 22:28:47 GMT"
+            }
+        ]
+    }]
+}

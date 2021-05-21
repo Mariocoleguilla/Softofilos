@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Import Test</title>
+</head>
+
+<body>
+
+    <input type="file" name="file" id="file" accept=".json" onchange="openFile(this.files)" />
+    <script type="text/javascript">
+    
+        function openFile(file) {
+
+            console.log(file[0]);
+        }
+
+    </script>
+</body>
+
+</html>

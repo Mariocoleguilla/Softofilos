@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de sesión | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <div class="login_registryTitleContainer">
+            <h2 class="pageTitle dark">Inicio de sesión</h2>
+        </div>
+        <fieldset class="login_registry">
+            <table>
+                <tr>
+                    <td>
+                        <label for="user">Usuario:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="user" id="userInput" placeholder="Nombre de Usuario" required="required" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">Contraseña:</label>
+                    </td>
+                    <td>
+                        <input type="password" name="password" id="passwordInput" placeholder="Contraseña" required="required" onkeypress="return enterLogin(event)"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <label for="remember">Recordar credenciales</label>
+                        <input type="checkbox" name="remember" id="remember" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="login_registryButtonContainer">
+                        <button id="loginButton" class="login_registryButton">Iniciar sesión</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        var header = document.getElementsByTagName("header")[0];
+        var menuList = document.getElementsByClassName("menuList")[0];
+        var sideMenuList = document.getElementsByClassName("sideMenuList")[0];
+        //Se evalua si ya hay un usuario con la sesión iniciada, en cuyo caso se redireccionará al área del usuario
+        if (getCookie("userLogged") != "") {
+
+            window.location.href = "userArea.html";
+        } else {
+
+            if (getCookie("bdStatus") != "ok") {
+
+                window.location.href = "index.html";
+            }
+
+            if (getCookie("remember") != "") {
+
+                var remember = JSON.parse(getCookie("remember")).remember;
+                document.getElementById("userInput").value = remember[0];
+                document.getElementById("passwordInput").value = decrypt(remember[1]);
+                document.getElementById("remember").setAttribute("checked", "checked");
+            }
+
+            document.getElementsByTagName("header")[0].style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            document.getElementsByTagName("footer")[0].style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            document.getElementsByClassName("mainTitle")[0].className = "mainTitle dark";
+            document.getElementsByClassName("companyParagraph")[0].className = "companyParagraph dark";
+            var footerH3 = document.getElementsByClassName("footerH3");
+            for (var i = 0; i < footerH3.length; i++) {
+
+                footerH3[i].className = "footerH3 dark";
+
+                for (var j = 0; j < footerH3[i].parentNode.children.length; j++) {
+
+                    if (footerH3[i].parentNode.children[j].tagName == "P") {
+                        footerH3[i].parentNode.children[j].style.color = "white";
+                    }
+                }
+            }
+            backgroundRandomizer();
+            registryLink(header, menuList);
+            registryLinkSideMenu(header, sideMenuList);
+
+            document.getElementById("loginButton").addEventListener("click", function () {
+
+                var user = document.getElementById("userInput").value;
+                var password = document.getElementById("passwordInput").value;
+                var warning = "";
+
+                if (user == "") {
+                    warning += "Rellene el campo de nombre de usuario<br/>";
+                }
+                if (password == "") {
+                    warning += "Rellene el campo de contraseña<br/>";
+                }
+                var rememberBoolean = false;
+
+                if (document.getElementById("remember").checked) {
+                    rememberBoolean = true;
+                }
+
+                if (warning == "") {
+                    login(document.getElementById("userInput").value, document.getElementById("passwordInput").value,
+                        rememberBoolean);
+                } else {
+
+                    $(function () {
+                        swal({
+                            type: 'error',
+                            title: 'Rellena los parámetros',
+                            html: $("<div>").addClass("animated tada").html(warning)
+                        });
+                    });
+                }
+            });
+
+        }
+    </script>
+</body>
+
+</html>

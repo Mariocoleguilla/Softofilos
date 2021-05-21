@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Índex | Softófilos</title>
+    <!-- Se utiliza normalize para que todos los navegadores rendericen la página de forma más consistente y siguiendo los últimos estándares -->
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <!-- Se importa la hoja de estilos propia -->
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <!-- Se importa el script funcs.js que contiene funciones muy utilizadas -->
+    <script src="./src/funcs/funcs.js"></script>
+    <!-- Se importa el framework Fonts Awesome 5 para hacer uso de los iconos -->
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <!-- Se importa jQuery -->
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <!-- Se importa la librería Sweet Alert 2 -->
+    <script src="./src/sweetalert2.all.js"></script>
+    <!-- Se importa la librería Animate.css -->
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <!-- Se importa el favicon -->
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Index | Últimos juegos</h2>
+        <div class="flex-container">
+            <div class="flex-item3">
+                <img class="gameImg" />
+                <h2 class="gameTitle"></h2>
+            </div>
+            <div class="flex-item3">
+                <img class="gameImg" />
+                <h2 class="gameTitle"></h2>
+            </div>
+            <div class="flex-item3">
+                <img class="gameImg" />
+                <h2 class="gameTitle"></h2>
+            </div>
+        </div>
+
+        <!-- Ventana Modal -->
+
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div id="dropContinue">
+                    Suelta aquí para empezar a escribir una crítica
+                </div>
+                <div id="dropStop">
+                    Suelta aquí para cancelar
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        var images = document.getElementsByTagName("img");
+        var modal = document.getElementById("modal");
+
+        if (getCookie("userLogged") != "") {
+
+            //Se crea un link para cerrar sesión en el caso de que haya un usuario logeado
+            logOutLink();
+            logOutLinkSideMenu();
+
+            //Si ya hay un usuario iniciado, se crea un link para que vaya al área del usuario, de lo contrario no hay link
+            userAreaLink();
+            userAreaLinkSideMenu();
+
+            //Se crea un mensaje de bienvenida en el caso de que haya un usuario con la sesión iniciada
+            welcomeMessage();
+
+            //Se establece el modo del tema elegido por el usuario
+            setBackgroundMode();
+
+        } else {
+            //Si no hay ningún usuario con la sesión iniciada, se crea un link de inicio de sesión y otro de registro
+            registryLink();
+            loginLink();
+
+            //También se crean los links del menú desplegable lateral
+            loginLinkSideMenu();
+            registryLinkSideMenu();
+        }
+
+        for (var i = 0; i < images.length; i++) {
+
+            images[i].setAttribute("draggable", "true");
+            images[i].addEventListener("dragstart", dragStart);
+        }
+
+        document.getElementById("dropContinue").addEventListener("dragover", dropContinueOver);
+        document.getElementById("dropStop").addEventListener("dragover", dropStopOver);
+        document.getElementById("dropContinue").addEventListener("dragleave", dragLeave);
+        document.getElementById("dropStop").addEventListener("dragleave", dragLeave);
+        document.getElementById("dropContinue").addEventListener("drop", dropContinue);
+        document.getElementById("dropStop").addEventListener("drop", dropStop);
+
+        if (window.indexedDB) {
+
+            var db;
+            var request = window.indexedDB.open("Softofilos", 1);
+
+            request.onupgradeneeded = function (event) {
+                db = request.result;
+                var usersStore = db.createObjectStore("users", {
+                    keyPath: "user"
+                });
+                var gamesStore = db.createObjectStore("games", {
+                    keyPath: "gameId",
+                    autoIncrement: true
+                });
+
+                gamesStore.createIndex("sort_by_id", "gameId");
+                gamesStore.createIndex("sort_by_date", "launchDate");
+                gamesStore.createIndex("sort_by_developer", "developer");
+                gamesStore.createIndex("sort_by_name", "name");
+                gamesStore.createIndex("sort_by_genre", "genre");
+
+                var criticsStore = db.createObjectStore("critics", {
+                    keyPath: "gameId"
+                });
+            };
+
+            request.onsuccess = function (event) {
+
+                db = request.result;
+                var tr = db.transaction(db.objectStoreNames, "readonly");
+                var usersStore = tr.objectStore("users");
+
+                usersStore.getAll().onsuccess = function (event) {
+
+                    if (this.result.length < 1) {
+
+                        //Se realizan las inserciones de los datos, y se llama a setIndexContent(db) cuando la petición Ajax se ha finalizado, sino da problemas
+                        primaryInserts(db);
+                    } else {
+
+                        //Se colocan los juegos en la portada de la página
+                        setIndexContent(db);
+                    }
+
+                }
+
+                document.cookie = "bdStatus = ok";
+
+            };
+
+            request.onerror = function (event) {
+
+                console.log("Error IndexedDB");
+                document.cookie = "bdStatus = failure";
+            }
+
+        } else {
+
+            swal({
+                type: 'error',
+                title: 'Incompatible',
+                text: 'Éste navegador no es compatible con IndexedDB'
+            });
+        }
+    </script>
+</body>
+
+</html>

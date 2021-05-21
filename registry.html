@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <div class="login_registryTitleContainer">
+            <h2 class="pageTitle dark">Registro</h2>
+        </div>
+        <fieldset class="login_registry">
+            <table>
+                <tr>
+                    <td>
+                        <label for="user">Nombre de usuario:</label>
+                    </td>
+                    <td>
+                        <input type="text" name="user" id="userInput" placeholder="Nombre de Usuario" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="date">Fecha de nacimiento:</label>
+                    </td>
+                    <td>
+                        <input type="date" name="date" id="dateInput" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password">Elige una contraseña:</label>
+                    </td>
+                    <td>
+                        <input type="password" name="password" id="passwordInput" placeholder="Contraseña" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="password2">Repite la contraseña:</label>
+                    </td>
+                    <td>
+                        <input type="password" name="password2" id="passwordInput2" placeholder="Repite la contraseña" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="login_registryButtonContainer">
+                        <button id="registryButton" class="login_registryButton">Registrarse</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        if (getCookie("userLogged") != "") {
+
+            window.location.href = "userArea.html";
+        } else {
+
+            if (getCookie("bdStatus") != "ok") {
+
+                window.location.href = "index.html";
+            }
+
+            document.getElementsByTagName("header")[0].style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            document.getElementsByTagName("footer")[0].style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            document.getElementsByClassName("mainTitle")[0].className = "mainTitle dark";
+            document.getElementsByClassName("companyParagraph")[0].className = "companyParagraph dark";
+            var footerH3 = document.getElementsByClassName("footerH3");
+            for (var i = 0; i < footerH3.length; i++) {
+
+                footerH3[i].className = "footerH3 dark";
+
+                for (var j = 0; j < footerH3[i].parentNode.children.length; j++) {
+
+                    if (footerH3[i].parentNode.children[j].tagName == "P") {
+                        footerH3[i].parentNode.children[j].style.color = "white";
+                    }
+                }
+            }
+            backgroundRandomizer();
+            loginLink(header, menuList);
+
+            document.getElementById("registryButton").addEventListener("click", function () {
+
+                var user = document.getElementById("userInput").value;
+                var date = document.getElementById("dateInput").value;
+                var password = document.getElementById("passwordInput").value;
+                var password2 = document.getElementById("passwordInput2").value;
+
+                var userRegExp = /[a-z0-9_-]/;
+                var passwordRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+                var warning = "";
+
+                if (user == "") {
+                    warning += "Rellene el campo de nombre de usuario<br/>";
+                }
+                if (date == "") {
+                    warning += "Rellene el campo de fecha de nacimiento<br/>";
+                }
+                if (password == "") {
+                    warning += "Rellene el campo de contraseña<br/>";
+                }
+                if (password2 == "") {
+                    warning += "Rellene el campo de repetición de contraseña<br/>";
+                }
+                if (userRegExp.test(user) != true) {
+                    warning +=
+                        "El nombre de usuario no cumple los requisitos:<br/>No debe de contener carácteres especiales<br/>";
+                }
+                if (passwordRegExp.test(password) != true) {
+                    warning +=
+                        "La contraseña no cumple los requisitos:<br/>Debe medir mínimo 8 con letras y números<br/>";
+                }
+
+                if (warning == "") {
+
+                    if (password == password2) {
+
+                        registry(user, date, password);
+                    } else {
+
+                        swal({
+                            type: 'question',
+                            title: 'Las contraseñas no coinciden'
+                        });
+                    }
+                } else {
+
+                    $(function () {
+                        swal({
+                            type: 'error',
+                            title: 'Rellena los parámetros',
+                            html: $("<div>").addClass("animated tada").html(warning)
+                        });
+                    });
+                }
+
+            });
+
+        }
+    </script>
+</body>
+
+</html>

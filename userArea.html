@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Área del usuario | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Área del usuario</h2>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        if (getCookie("userLogged") != "") {
+
+            logOutLink();
+            logOutLinkSideMenu()
+            welcomeMessage();
+            setBackgroundMode();
+            var main = document.getElementsByTagName("main")[0];
+
+            if (getCookie("userLogged") == "admin") {
+
+                var ids = ["backgroundMode", "accountSettings", "adminManagement", "myCritics"];
+                var divContainer = document.createElement("div");
+                divContainer.className = "flex-container userMenuContainer";
+                main.appendChild(divContainer);
+
+                for (var i = 0; i < ids.length; i++) {
+
+                    var divItem = document.createElement("div");
+                    divItem.className = "flex-item3 userMenuItem";
+                    divItem.id = ids[i];
+                    divContainer.appendChild(divItem);
+                }
+
+                var adminManagement = document.getElementById("adminManagement");
+                var adminManagementIconContainer = document.createElement("div");
+                adminManagementIconContainer.className = "userMenuElementIconContainer";
+                adminManagement.appendChild(adminManagementIconContainer);
+                var adminIconSpan = document.createElement("i");
+                adminIconSpan.className = "fas fa-code";
+                adminManagementIconContainer.appendChild(adminIconSpan);
+                var paragraph = document.createElement("p");
+                paragraph.textContent = "Administración de la página";
+                paragraph.className = "userMenuElementParagraph";
+                adminManagement.appendChild(paragraph);
+
+                document.getElementById("adminManagement").onclick = function () {
+                    window.location.href = "adminManagement.html";
+                }
+
+                /*
+                -Background mode <<DONE>>
+                -Ajustes de la cuenta (cambiar contraseña, etc...)
+                -Ajustes de administrador (añadir/quitar/editar juegos...) <<DONE>>
+                -Mis opiniones <<DONE>>
+                */
+            } else {
+
+                var ids = ["backgroundMode", "accountSettings", "myCritics"];
+
+                var divContainer = document.createElement("div");
+                divContainer.className = "flex-container userMenuContainer";
+                main.appendChild(divContainer);
+
+                for (var i = 0; i < ids.length; i++) {
+
+                    var divItem = document.createElement("div");
+                    divItem.className = "flex-item3 userMenuItem";
+                    divItem.id = ids[i];
+                    divContainer.appendChild(divItem);
+                }
+            }
+
+            document.getElementById("backgroundMode").setAttribute("onclick", "changeBackgroundMode(this)");
+
+            var iconContainer = document.createElement("div");
+            iconContainer.id = "backgroundModeIconContainer";
+            document.getElementById("backgroundMode").appendChild(iconContainer);
+
+            var paragraph = document.createElement("p");
+            paragraph.id = "actualBackgroundMode";
+            paragraph.className = "userMenuElementParagraph";
+            document.getElementById("backgroundMode").appendChild(paragraph);
+
+            var accountSettings = document.getElementById("accountSettings");
+            var accountSettingsIconContainer = document.createElement("div");
+            accountSettingsIconContainer.className = "userMenuElementIconContainer";
+            accountSettings.appendChild(accountSettingsIconContainer);
+            var settingsIconSpan = document.createElement("i");
+            settingsIconSpan.className = "fas fa-cogs";
+            accountSettingsIconContainer.appendChild(settingsIconSpan);
+            var paragraph = document.createElement("p");
+            paragraph.textContent = "Ajustes de la cuenta";
+            paragraph.className = "userMenuElementParagraph";
+            accountSettings.appendChild(paragraph);
+
+            accountSettings.onclick = function () {
+                window.location.href = "accountSettings.html";
+            }
+
+            var myCritics = document.getElementById("myCritics");
+            var myCriticsIconContainer = document.createElement("div");
+            myCriticsIconContainer.className = "userMenuElementIconContainer";
+            myCritics.appendChild(myCriticsIconContainer);
+            var myCriticsIconSpan = document.createElement("i");
+            myCriticsIconSpan.className = "far fa-list-alt";
+            myCriticsIconContainer.appendChild(myCriticsIconSpan);
+            var paragraph = document.createElement("p");
+            paragraph.textContent = "Mis críticas";
+            paragraph.className = "userMenuElementParagraph";
+            myCritics.appendChild(paragraph);
+
+            document.getElementById("myCritics").onclick = function () {
+                window.location.href = "myCritics.html";
+            }
+
+        } else {
+
+            window.location.href = "index.html";
+        }
+
+        /* Se añade el efecto de transición sólo para ésta pagina (dado que es la única en la que se cambia el modo de oscuridad o claridad) */
+        document.getElementsByTagName("header")[0].style.transition = "1s";
+        document.getElementsByTagName("main")[0].style.transition = "1s";
+        document.getElementsByTagName("footer")[0].style.transition = "1s";
+        document.getElementsByClassName("mainTitle")[0].style.transition = "1s";
+        document.getElementsByClassName("companyParagraph")[0].style.transition = "1s";
+        document.getElementsByClassName("pageTitle")[0].style.transition = "1s";
+        document.getElementsByClassName("welcomeLabel")[0].style.transition = "1s";
+        var footerH3 = document.getElementsByClassName("footerH3");
+        for (var i = 0; i < footerH3.length; i++) {
+
+            footerH3[i].style.transition = "1s";
+        }
+    </script>
+</body>
+
+</html>

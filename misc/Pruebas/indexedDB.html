@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pruebas IndexedDB</title>
+    <style>
+        h1,
+        button {
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pruebas IndexedDB</h1>
+    <hr/>
+    <button onclick="openDB()">Abrir base de datos</button>
+    <script type="text/javascript">
+        function openDB() {
+
+            var request = window.indexedDB.open("DBTest");
+            request.onsuccess = function (event) {
+                console.log("Éxito al abrir la base de datos");
+            }
+            request.onerror = function (event) {
+                console.log("Error al abrir la base de datos " + event.target.errorCode);
+            }
+
+            request.onupgradeneeded = function(event) {
+                console.log("Lanzamiento del evento OnUpgradeNeeded");
+
+                var db = event.target.result;
+                var objectStore = db.createObjectStore("PrimerObjectStore");
+                objectStore.createIndex("name", "name", { unique: false });
+                objectStore.createIndex("dni", "dni", { unique: true });
+            }
+            
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Ajax</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <button onclick="request()">Realizar Petición</button>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        function request() {
+            var db;
+            var request = window.indexedDB.open("Softofilos", 1);
+
+            request.onsuccess = function () {
+
+                var usernames = [];
+                var tr = db.transaction(db.objectStoreNames, "readwrite");
+                var usersStore = tr.objectStore("users");
+                var users = usersStore.getAll();
+                
+                users.onsuccess = function () {
+
+
+                }
+
+
+                var request;
+
+                if (window.XMLHttpRequest) {
+                    request = new XMLHttpRequest();
+                } else if (window.ActiveXObject) {
+                    request = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+
+                request.open('GET', 'http://localhost/PWC/Softofilos/ajaxTest.php?parameter=example', true);
+                request.send(null);
+
+                request.onreadystatechange = function (evento) {
+
+                    if ((evento.target.readyState == 4) && ((evento.target.status == 200))) {
+
+                        console.log(request.responseText);
+                    }
+                };
+            }
+
+            request.onerror = function () {
+                console.log("Error");
+            }
+
+            request.onupgradeneeded = function () {
+                console.log("UpgradeNeeded");
+            }
+
+        }
+    </script>
+</body>
+
+</html>

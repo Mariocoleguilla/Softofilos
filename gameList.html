@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Juegos | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Lista de Juegos</h2>
+        <section id="searchSection">
+            <div class="searchContainer">
+                <i class="fas fa-search"></i>
+                <label id="searchLabel" for="search">Búsqueda por nombre:</label>
+                <input type="text" name="search" id="searchInput" />
+            </div>
+        </section>
+        <section id="resultSection"></section>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div id="dropContinue">
+                    Suelta aquí para empezar a escribir una crítica
+                </div>
+                <div id="dropStop">
+                    Suelta aquí para cancelar
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        if (getCookie("bdStatus") != "ok") {
+
+            window.location.href = "index.html";
+        } else {
+
+            if (getCookie("userLogged") != "") {
+
+                logOutLink();
+                logOutLinkSideMenu()
+                welcomeMessage();
+                setBackgroundMode();
+                userAreaLink();
+                userAreaLinkSideMenu();
+            } else {
+
+                registryLink();
+                loginLink();
+                loginLinkSideMenu();
+                registryLinkSideMenu();
+            }
+
+            var images = document.getElementsByTagName("img");
+            var modal = document.getElementById("modal");
+            setGameListContent(function () {
+                for (var i = 0; i < images.length; i++) {
+
+                    images[i].setAttribute("draggable", "true");
+                    images[i].addEventListener("dragstart", dragStart);
+                }
+            });
+
+            $(function () {
+                $("#searchInput").on("keyup", function () {
+                    setGameListContent(function () {
+                        for (var i = 0; i < images.length; i++) {
+
+                            images[i].setAttribute("draggable", "true");
+                            images[i].addEventListener("dragstart", dragStart);
+                        }
+                    });
+                });
+            });
+
+            document.getElementById("dropContinue").addEventListener("dragover", dropContinueOver);
+            document.getElementById("dropStop").addEventListener("dragover", dropStopOver);
+            document.getElementById("dropContinue").addEventListener("dragleave", dragLeave);
+            document.getElementById("dropStop").addEventListener("dragleave", dragLeave);
+            document.getElementById("dropContinue").addEventListener("drop", dropContinue);
+            document.getElementById("dropStop").addEventListener("drop", dropStop);
+        }
+    </script>
+</body>
+
+</html>

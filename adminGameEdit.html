@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar obras | Softófilos</title>
+    <link rel="stylesheet" type="text/css" href="./src/style/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./src/style/style.css">
+    <script src="./src/funcs/funcs.js"></script>
+    <script defer src="./src/FontsAwesome_5_Free/svg-with-js/js/fontawesome-all.js"></script>
+    <script src="./src/jquery-3.3.1.min.js"></script>
+    <script src="./src/sweetalert2.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="./src/animate.css">
+    <link rel="icon" type="image/png" href="./src/favicon.png">
+</head>
+
+<body>
+    <header>
+        <script src="src/elements/header.js"></script>
+    </header>
+    <main>
+        <h2 class="pageTitle">Editar obras</h2>
+        <section id="searchSection">
+            <div class="searchContainer">
+                <i class="fas fa-search"></i>
+                <label for="search">Búsqueda por nombre:</label>
+                <input type="text" name="search" id="searchInput" />
+            </div>
+        </section>
+        <section id="resultSection"></section>
+        <div id="modalEditGame" class="modal">
+            <div class="modal-content modalEditGameContent">
+                <h3 class="titleModal">Editar una obra</h3>
+                <table>
+                    <tr>
+                        <td>
+                            <label for="name">Título de la obra:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" id="nameInput" placeholder="Título de la obra" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="genre">Género de la obra:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="genre" id="genreInput" placeholder="Género de la obra" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="developer">Desarrollador:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="developer" id="developerInput" placeholder="Desarrollador" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="date">Fecha de lanzamiento:</label>
+                        </td>
+                        <td>
+                            <input type="date" name="date" id="dateInput" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="developer">Latitud del desarrollador (Opcional): </label>
+                        </td>
+                        <td>
+                            <input type="number" name="lat" id="latInput" placeholder="Latitud" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="developer">Longitud del desarrollador (Opcional): </label>
+                        </td>
+                        <td>
+                            <input type="number" name="lng" id="lngInput" placeholder="Longitud" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Carátula actual:</label>
+                        </td>
+                        <td>
+                            <img id="poster" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Añade una carátula nueva:</label>
+                        </td>
+                        <td>
+                            <div id="dropImage">Arrastra una imagen aquí</div>
+                            <p id="droppedImage">&nbsp;</p>
+                            <input type="hidden" id="hidden" />
+                        </td>
+                    </tr>
+                    </tr>
+                </table>
+                <button id="editGameButton">Modificar</button>
+                <button id="deleteGameButton">Eliminar</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <script src="src/elements/footer.js"></script>
+    </footer>
+    <script type="text/javascript">
+        var modalEditGame = document.querySelector("#modalEditGame");
+        if (getCookie("userLogged") == "admin" && getCookie("userLogged") != "") {
+
+            logOutLink();
+            logOutLinkSideMenu()
+            welcomeMessage();
+            setBackgroundMode();
+            userAreaLink();
+            userAreaLinkSideMenu();
+            search();
+
+            document.getElementById("dropImage").addEventListener("dragover", dragOverExternalImage);
+            document.getElementById("dropImage").addEventListener("dragleave", dragLeave);
+            document.getElementById("dropImage").addEventListener("drop", dropExternalImage);
+
+            $(function () {
+
+                $("#searchInput").on("keyup", function () {
+                    search();
+                });
+            });
+            $(function () {
+
+                $("#editGameButton").click(function () {
+
+                    var name = document.getElementById("nameInput").value;
+                    var genre = document.getElementById("genreInput").value;
+                    var developer = document.getElementById("developerInput").value;
+                    var date = document.getElementById("dateInput").value;
+                    var id = document.getElementById("hidden").value;
+                    var lat = document.getElementById("latInput").value;
+                    var lng = document.getElementById("lngInput").value;
+                    var img = "";
+                    var warning = "";
+
+                    if (name == "") {
+                        warning += "Rellene el campo de nombre de la obra<br/>";
+                    }
+                    if (genre == "") {
+                        warning += "Rellene el campo de género de la obra<br/>";
+                    }
+                    if (developer == "") {
+                        warning += "Rellene el campo de desarrollador de la obra<br/>";
+                    }
+                    if (date == "") {
+                        warning += "Rellene el campo de fecha de lanzamiento<br/>";
+                    } else if (new Date(date) > new Date()) {
+                        warning += "La fecha debe de ser anterior a la actual<br/>";
+                    }
+
+                    if (document.getElementById("droppedImageName") != null) {
+
+                        img = document.getElementById("droppedImageName").textContent;
+                        if (warning == "") {
+
+                            add_editGame(name, genre, developer, date, lat, lng, img, id, true);
+                        } else {
+
+                            $(function () {
+                                swal({
+                                    type: 'error',
+                                    title: 'Rellena los parámetros',
+                                    html: $("<div>").addClass("animated tada").html(
+                                        warning)
+                                });
+                            });
+                        }
+                    } else {
+
+                        var db2;
+                        var request2 = window.indexedDB.open("Softofilos", 1);
+
+                        request2.onsuccess = function (event) {
+
+                            db2 = request2.result;
+                            var tr2 = db2.transaction(db2.objectStoreNames, "readonly");
+                            var gamesStore2 = tr2.objectStore("games");
+
+                            var getSrc = gamesStore2.get(parseInt(document.getElementById("hidden")
+                                .value));
+
+                            getSrc.onsuccess = function (event) {
+
+                                img = getSrc.result.img;
+                                if (warning == "") {
+                                    add_editGame(name, genre, developer, date, lat, lng, img,
+                                        id, true);
+                                } else {
+
+                                    $(function () {
+                                        swal({
+                                            type: 'error',
+                                            title: 'Rellena los parámetros',
+                                            html: $("<div>").addClass(
+                                                "animated tada").html(
+                                                warning)
+                                        });
+                                    });
+                                }
+                            }
+                        }
+                    }
+                });
+
+                $("#deleteGameButton").click(function () {
+
+                    swal({
+                        title: '¿Está seguro?',
+                        text: "No podras revertir los cambios",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminar'
+                    }).then((result) => {
+                        if (result.value) {
+                            deleteGame(document.getElementById("hidden").value);
+                            setTimeout(function () {
+                                window.location.href = "adminGameEdit.html"
+                            }, 1500);
+                            swal({
+                                type: 'success',
+                                title: '¡Eliminado!',
+                                text: 'El registro se ha eliminado permanentemente, Redireccionando...',
+                                showConfirmButton: false,
+                            });
+
+                            document.getElementById("deleteGameButton").setAttribute(
+                                "disabled", "disabled");
+                        }
+                    });
+                });
+            });
+
+        } else {
+
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>
